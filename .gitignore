@@ -1,0 +1,6 @@
+venv/
+.env
+pyproject.toml
+readme.md
+
+poetry.lock
