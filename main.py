@@ -6,15 +6,17 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine
 import uvicorn
 from email_validator import validate_email, EmailNotValidError
+from items_views import router as items_router
+from users.views import router as users_router
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 engine = create_engine(DATABASE_URL)
 
 app = FastAPI()
+app.include_router(items_router)
+app.include_router(users_router)
 
-class CreateUser(BaseModel):
-    email: EmailStr
 
 
 @app.get("/")
@@ -30,12 +32,16 @@ def hello(name: str = "World"):
         "message": f"Hello {name}"
     }
 
-@app.post("/users/")
-def create_user(user: CreateUser):
+
+
+@app.post("/cals/add/")
+def add(a: int, b: int):
     return {
-        "message": "success",
-        "email": user.email
+        "a": a,
+        "b": b,
+        "result": a + b
     }
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", reload=True)
